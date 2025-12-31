@@ -23,6 +23,9 @@ export default function Checkout() {
 
     cart.forEach((item, index) => {
       message += `${index + 1}. ${item.name}%0A`
+if (item.level) {
+  message += `   🌶 Level: ${item.level}%0A`
+}
       message += `   Qty : ${item.qty}%0A`
       message += `   Harga : Rp ${item.price.toLocaleString()}%0A`
       message += `   Subtotal : Rp ${(item.price * item.qty).toLocaleString()}%0A`
