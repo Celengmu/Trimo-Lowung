@@ -51,7 +51,7 @@ export const foods = [
   },
   {
     id: 6,
-    name: "Bakso",
+    name: "CiKu(Cilok Kuah)",
     price: 5000,
     image: bakso,
   },
