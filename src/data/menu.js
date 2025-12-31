@@ -21,14 +21,14 @@ export const foods = [
     name: "Mie Jebew",
     price: 7000,
     image: jebew,
-    levels: ["Tidak pedas", "Pedas 1", "Pedas 2", "Pedas 3", "Pedas 4"]
+    levels: ["Tidak pedas", "Pedas 1", "Pedas 2", "Pedas 3", "Pedas 4", "Pedas 5"]
   },
   {
     id: 2,
     name: "Mie Jebew Seafood",
     price: 12000,
     image: jebewS,
-    levels: ["Tidak pedas", "Pedas 1", "Pedas 2", "Pedas 3", "Pedas 4"]
+    levels: ["Tidak pedas", "Pedas 1", "Pedas 2", "Pedas 3", "Pedas 4", "Pedas 5"]
   },
   {
     id: 3,
