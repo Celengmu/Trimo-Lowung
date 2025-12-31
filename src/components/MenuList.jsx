@@ -73,7 +73,7 @@ export default function MenuList({ data }) {
                       })
                     }
                   >
-                    <option value="">Pilih level pedas</option>
+                    <option value="">Pilih level</option>
                     {item.levels.map((lvl, i) => (
                       <option key={i} value={lvl}>
                         {lvl}
