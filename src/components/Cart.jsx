@@ -39,7 +39,14 @@ export default function Cart() {
             {cart.map((item, idx) => (
               <tr key={item.id}>
                 <td>{idx + 1}</td>
-                <td>{item.name}</td>
+                <td>
+  {item.name}
+  {item.level && (
+    <div className="text-danger small">
+      🌶 {item.level}
+    </div>
+  )}
+</td>
                 <td>Rp {item.price.toLocaleString()}</td>
                 <td>
                   <div className="d-flex align-items-center gap-2">
