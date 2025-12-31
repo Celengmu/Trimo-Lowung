@@ -5,10 +5,9 @@ import { useState } from "react"
 
 export default function MenuList({ data }) {
   const { cart, addItem, increase, decrease } = useCart()
-
-  // simpan level per menu
   const [levelMap, setLevelMap] = useState({})
 
+  // ambil qty berdasarkan id + level
   const getQty = (id, level) => {
     const item = cart.find(i => i.id === `${id}-${level}`)
     return item ? item.qty : 0
@@ -18,17 +17,17 @@ export default function MenuList({ data }) {
     const level = levelMap[item.id]
 
     if (item.levels && !level) {
-      alert("Pilih level pedas dulu")
+      alert("Silakan pilih level pedas dulu")
       return
     }
 
     addItem({
       ...item,
-      level,
-      id: item.levels ? `${item.id}-${level}` : item.id
+      id: item.levels ? `${item.id}-${level}` : item.id,
+      level
     })
 
-    // ✅ AUTO RESET LEVEL SETELAH TAMBAH
+    // reset dropdown setelah klik +
     setLevelMap(prev => ({
       ...prev,
       [item.id]: ""
@@ -71,37 +70,32 @@ export default function MenuList({ data }) {
                   Rp {item.price.toLocaleString()}
                 </p>
 
-                {/* 🔥 SLIDER LEVEL PEDAS */}
+                {/* DROPDOWN LEVEL PEDAS */}
                 {item.levels && (
-                  <>
-                    <label className="small fw-semibold">
-                      Level pedas:
-                      <span className="text-danger ms-1">
-                        {levelMap[item.id] || "-"}
-                      </span>
-                    </label>
-
-                    <input
-                      type="range"
-                      min="1"
-                      max={item.levels.length}
-                      step="1"
-                      value={levelMap[item.id] || ""}
-                      onChange={(e) =>
-                        setLevelMap({
-                          ...levelMap,
-                          [item.id]: `Pedas ${e.target.value}`
-                        })
-                      }
-                      className="form-range"
-                    />
-                  </>
+                  <select
+                    className="form-select mb-2"
+                    value={levelMap[item.id] || ""}
+                    onChange={(e) =>
+                      setLevelMap({
+                        ...levelMap,
+                        [item.id]: e.target.value
+                      })
+                    }
+                  >
+                    <option value="">Pilih level pedas</option>
+                    {item.levels.map((lvl, i) => (
+                      <option key={i} value={lvl}>
+                        🌶 {lvl}
+                      </option>
+                    ))}
+                  </select>
                 )}
 
-                <div className="d-flex justify-content-center align-items-center gap-2 mt-2">
+                <div className="d-flex justify-content-center align-items-center gap-2">
                   <Button
                     size="sm"
                     variant="outline-secondary"
+                    disabled={item.levels && !levelMap[item.id]}
                     onClick={() =>
                       decrease(
                         item.levels
@@ -109,7 +103,6 @@ export default function MenuList({ data }) {
                           : item.id
                       )
                     }
-                    disabled={item.levels && !levelMap[item.id]}
                   >
                     −
                   </Button>
