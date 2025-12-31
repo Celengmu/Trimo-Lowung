@@ -7,31 +7,48 @@ export default function MenuList({ data }) {
   const { cart, addItem, increase, decrease } = useCart()
   const [levelMap, setLevelMap] = useState({})
 
-  // ambil qty berdasarkan id + level
-  const getQty = (id, level) => {
-    const item = cart.find(i => i.id === `${id}-${level}`)
-    return item ? item.qty : 0
+  // ambil qty dengan aman (level / non-level)
+  const getQty = (item) => {
+    if (item.levels) {
+      const level = levelMap[item.id]
+      if (!level) return 0
+      const found = cart.find(i => i.id === `${item.id}-${level}`)
+      return found ? found.qty : 0
+    } else {
+      const found = cart.find(i => i.id === item.id)
+      return found ? found.qty : 0
+    }
   }
 
   const handleAdd = (item) => {
-    const level = levelMap[item.id]
+    if (item.levels) {
+      const level = levelMap[item.id]
+      if (!level) {
+        alert("Silakan pilih level pedas")
+        return
+      }
 
-    if (item.levels && !level) {
-      alert("Silakan pilih level pedas dulu")
-      return
+      addItem({
+        ...item,
+        id: `${item.id}-${level}`,
+        level
+      })
+
+      // reset level setelah tambah
+      setLevelMap(prev => ({ ...prev, [item.id]: "" }))
+    } else {
+      addItem(item)
     }
+  }
 
-    addItem({
-      ...item,
-      id: item.levels ? `${item.id}-${level}` : item.id,
-      level
-    })
-
-    // reset dropdown setelah klik +
-    setLevelMap(prev => ({
-      ...prev,
-      [item.id]: ""
-    }))
+  const handleDecrease = (item) => {
+    if (item.levels) {
+      const level = levelMap[item.id]
+      if (!level) return
+      decrease(`${item.id}-${level}`)
+    } else {
+      decrease(item.id)
+    }
   }
 
   return (
@@ -51,17 +68,15 @@ export default function MenuList({ data }) {
                   style={{ height: 150, objectFit: "cover" }}
                 />
 
-                {item.levels &&
-                  levelMap[item.id] &&
-                  getQty(item.id, levelMap[item.id]) > 0 && (
-                    <Badge
-                      bg="danger"
-                      pill
-                      className="position-absolute top-0 start-100 translate-middle"
-                    >
-                      {getQty(item.id, levelMap[item.id])}
-                    </Badge>
-                  )}
+                {item.levels && getQty(item) > 0 && (
+                  <Badge
+                    bg="danger"
+                    pill
+                    className="position-absolute top-0 start-100 translate-middle"
+                  >
+                    {getQty(item)}
+                  </Badge>
+                )}
               </div>
 
               <Card.Body className="text-center">
@@ -70,7 +85,7 @@ export default function MenuList({ data }) {
                   Rp {item.price.toLocaleString()}
                 </p>
 
-                {/* DROPDOWN LEVEL PEDAS */}
+                {/* DROPDOWN LEVEL */}
                 {item.levels && (
                   <select
                     className="form-select mb-2"
@@ -95,23 +110,13 @@ export default function MenuList({ data }) {
                   <Button
                     size="sm"
                     variant="outline-secondary"
+                    onClick={() => handleDecrease(item)}
                     disabled={item.levels && !levelMap[item.id]}
-                    onClick={() =>
-                      decrease(
-                        item.levels
-                          ? `${item.id}-${levelMap[item.id]}`
-                          : item.id
-                      )
-                    }
                   >
                     −
                   </Button>
 
-                  <strong>
-                    {item.levels
-                      ? getQty(item.id, levelMap[item.id])
-                      : getQty(item.id)}
-                  </strong>
+                  <strong>{getQty(item)}</strong>
 
                   <Button
                     size="sm"
