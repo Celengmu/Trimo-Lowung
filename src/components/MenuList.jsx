@@ -4,10 +4,10 @@ import { useCart } from "../context/CartContext"
 import { useState } from "react"
 
 export default function MenuList({ data }) {
-  const { cart, addItem, increase, decrease } = useCart()
+  const { cart, addItem, decrease } = useCart()
   const [levelMap, setLevelMap] = useState({})
 
-  // ambil qty dengan aman (level / non-level)
+  // Ambil qty sesuai item (dengan / tanpa level)
   const getQty = (item) => {
     if (item.levels) {
       const level = levelMap[item.id]
@@ -33,9 +33,6 @@ export default function MenuList({ data }) {
         id: `${item.id}-${level}`,
         level
       })
-
-      // reset level setelah tambah
-      setLevelMap(prev => ({ ...prev, [item.id]: "" }))
     } else {
       addItem(item)
     }
@@ -97,7 +94,7 @@ export default function MenuList({ data }) {
                       })
                     }
                   >
-                    <option value="">Pilih level</option>
+                    <option value="">Pilih Level</option>
                     {item.levels.map((lvl, i) => (
                       <option key={i} value={lvl}>
                         🌶 {lvl}
