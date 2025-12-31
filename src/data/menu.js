@@ -47,6 +47,7 @@ export const foods = [
     name: "Wonton Chili Oil",
     price: 5000,
     image: wontonC,
+    levels: ["Tidak pedas", "Pedas 1", "Pedas 2", "Pedas 3", "Pedas 4", "Pedas 5"]
   },
   {
     id: 6,
